@@ -10,13 +10,13 @@
         "form-media", 
         "extension"
     ],
-    "homepage": "https://github.com/deatil/dcat-form-media",
+    "homepage": "https://github.com/halyang92/dcat-form-media",
     "license": "MIT",
     "authors": [
         {
-            "name": "deatil",
-            "email": "deatil@github.com",
-            "homepage": "https://github.com/deatil"
+            "name": "halyang92",
+            "email": "halyang92@github.com",
+            "homepage": "https://github.com/halyang92"
         }
     ],
     "require": {
