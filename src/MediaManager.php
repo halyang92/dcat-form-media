@@ -168,11 +168,18 @@ class MediaManager
      */
     public function upload($files = [])
     {
-        foreach ($files as $file) {
-            $this->storage->putFileAs($this->path, $file, $this->getPutFileName($file));
+        // 支持返回文件名
+        $return = [
+            'status' => true ,
+        ];
+        foreach ($files as $key => $file) {
+            $return['data'][$key]['filename']  = $file->getClientOriginalName();
+            $return['data'][$key]['filesize']  = $file->getSize();
+            $return['data'][$key]['mime_type'] = $file->getMimeType();
+            $return['data'][$key]['created_at'] = date('Y-m-d H:i:s' , $file->getATime());
+            $return['data'][$key]['url']       = $this->storage->putFileAs($this->path , $file , $this->getPutFileName($file));
         }
-
-        return true;
+        return $return;
     }
     
     /**

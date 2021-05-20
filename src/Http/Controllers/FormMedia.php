@@ -3,7 +3,7 @@
 namespace Lake\FormMedia\Http\Controllers;
 
 use Illuminate\Routing\Controller;
-
+use Illuminate\Support\Facades\DB;
 use LakeFormMedia;
 use Lake\FormMedia\MediaManager;
 
@@ -65,8 +65,21 @@ class FormMedia extends Controller
         }
         
         try {
-            if ($manager->upload($files)) {
-                return $this->renderJson(LakeFormMedia::trans('form-media.upload_success'), 200);
+            $uploadResult = $manager->upload($files);
+
+            if ($uploadResult['status']) {
+                // 插入附件表
+                foreach ($uploadResult['data'] as $item) {
+                    DB::table('attachment')->insert([
+                        'filename'   => $item['filename'] ,
+                        'filesize'   => $item['filesize'] ,
+                        'mime_type'  => $item['mime_type'] ,
+                        'url'        => $item['url'] ,
+                        'created_at' => $item['created_at'] ,
+                        'updated_at' => $item['created_at'] ,
+                    ]);
+                }
+                return $this->renderJson(LakeFormMedia::trans('form-media.upload_success'), 200, $uploadResult['data']);
             }
         } catch (\Exception $e) {
             return $this->renderJson(LakeFormMedia::trans('form-media.upload_error'), -1);
